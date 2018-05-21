@@ -1,0 +1,24 @@
+version: '3.1'
+
+services:
+
+  db:
+    image: mysql:${DB_VERSION}
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASS}
+      MYSQL_DATABASE:      ${DB_NAME}
+      MYSQL_USER:          ${DB_USER}
+      MYSQL_PASSWORD:      ${DB_PASS}
+
+  web:
+    build: .
+    ports:
+    - '8080:80'
+    restart: always
+    environment:
+      QA_DB_USER: ${DB_USER}
+      QA_DB_PASS: ${DB_PASS}
+      QA_DB_NAME: ${DB_NAME}
+    links:
+      - db
