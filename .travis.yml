@@ -15,8 +15,7 @@ before_install:
   - sudo apt-get -y -o Dpkg::Options::="--force-confnew" install docker-ce
 
 script:
-  - docker-compose build --no-cache
-  - docker-compose up -d --force-recreate
+  - docker-compose up -d --build
 
 
 
