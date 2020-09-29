@@ -8,11 +8,11 @@ RUN apt-get update \
              git   \
         && rm -r /var/lib/apt/lists/*
 
+COPY ./question2answer-latest.zip /question2answer-latest.zip
 
-RUN curl -o /q2a.zip http://www.question2answer.org/question2answer-latest.zip \
-&& unzip /q2a.zip -d /q2a     \
+RUN unzip /question2answer-latest.zip -d /q2a \
 && mv /q2a/*/* /var/www/html/ \
-&& rm /q2a.zip                \
+&& rm /question2answer-latest.zip                \
 && rm -rf /q2a
 
 RUN cd /var/www/html/                                                                                      \
@@ -27,16 +27,13 @@ RUN cd /var/www/html/                                                           
  && git clone https://github.com/nakov/q2a-plugin-open-questions.git       qa-plugin/qa-questions-open     \
  && git clone https://github.com/q2a-projects/CleanStrap.git               qa-theme/cleanStrap
 
-RUN mv qa-plugin/qa-open-login/providers-sample.php qa-plugin/qa-open-login/providers.php \
- && mv Donut/qa-plugin/Donut-admin qa-plugin/Donut-admin \
- && mv Donut/qa-theme/Donut-theme qa-theme/Donut-theme 
+RUN mv qa-plugin/qa-open-login/providers-sample.php qa-plugin/qa-open-login/providers.php
 
 RUN mv /var/www/html/qa-config-example.php ${QA_CONFIG}                     \
  && sed -i -e 's/127.0.0.1/db/g' ${QA_CONFIG}                               \
  && sed -i -e "s/'your-mysql-username'/getenv('QA_DB_USER')/g" ${QA_CONFIG} \
  && sed -i -e "s/'your-mysql-password'/getenv('QA_DB_PASS')/g" ${QA_CONFIG} \
  && sed -i -e "s/'your-mysql-db-name'/getenv('QA_DB_NAME')/g"  ${QA_CONFIG} \
- && sed -i -e "s/SnowFlat/Donut-theme/" qa-include/app/options.php          \
  && chown -R www-data:www-data /var/www/html/
 
 RUN docker-php-ext-install mysqli
