@@ -9,11 +9,10 @@ RUN apt-get update \
              git   \
         && rm -r /var/lib/apt/lists/*
 
-COPY ./question2answer-latest.zip /question2answer-latest.zip
-
-RUN unzip /question2answer-latest.zip -d /q2a \
+RUN curl -o /q2a.zip https://www.question2answer.org/releases/question2answer-1.8.5.zip \
+&& unzip /q2a.zip -d /q2a     \
 && mv /q2a/*/* /var/www/html/ \
-&& rm /question2answer-latest.zip                \
+&& rm /q2a.zip                \
 && rm -rf /q2a
 
 RUN cd /var/www/html/                                                                                      \
@@ -38,8 +37,5 @@ RUN mv /var/www/html/qa-config-example.php ${QA_CONFIG}                     \
 RUN rm -rf /var/www/html/qa-plugin/wysiwyg-editor/ckeditor/* 
 
 COPY ./ckeditor /var/www/html/qa-plugin/wysiwyg-editor/ckeditor
-
-# May changing this row in the future this one only removes the config.toolbar lines
-# RUN sed -i -e '6,22d' ${QA_EDITOR_CONFIG}
 
 RUN docker-php-ext-install mysqli
