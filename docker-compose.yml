@@ -5,6 +5,8 @@ services:
   db:
     image: mysql:${DB_VERSION}
     restart: always
+    volumes:
+      - db-data:/var/lib/mysql
     environment:
       MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASS}
       MYSQL_DATABASE:      ${DB_NAME}
@@ -14,7 +16,7 @@ services:
   web:
     build: .
     ports:
-    - '8080:80'
+    - ${WEB_PORT}
     restart: always
     environment:
       QA_DB_USER: ${DB_USER}
@@ -22,3 +24,6 @@ services:
       QA_DB_NAME: ${DB_NAME}
     links:
       - db
+
+volumes:
+  db-data:
